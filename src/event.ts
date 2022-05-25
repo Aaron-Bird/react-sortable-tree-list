@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './index.less';
 import { moveNodePosition, isChildNode } from './utils';
 
 function handleDrag(e: React.DragEvent) {
@@ -8,9 +7,10 @@ function handleDrag(e: React.DragEvent) {
 }
 
 function handleDragStart(e: React.DragEvent, props: any) {
-  const { treeDispatch, node, parent, index } = props;
+  const { treeDispatch, node, parent, index, setDragging } = props;
   e.stopPropagation();
   setTimeout(() => {
+    // setDragging(true);
     treeDispatch({
       type: 'dragged',
       payload: {
@@ -22,20 +22,21 @@ function handleDragStart(e: React.DragEvent, props: any) {
   }, 0);
 }
 
-function handleDragEnter(e: React.DragEvent, props: any) {
+type SetState = React.Dispatch<React.SetStateAction<boolean>>;
+function handleDragEnter(e: React.DragEvent, props: any, setState: SetState) {
   e.stopPropagation();
   e.preventDefault();
   const { treeState, node } = props;
   const fromNode = treeState?.dragged.node;
   if (fromNode && fromNode !== node && !isChildNode(fromNode, node)) {
-    e.currentTarget.classList.add(styles['active']);
+    setState(true);
   }
 }
 
-function handleDragLeave(e: React.DragEvent, props: any) {
+function handleDragLeave(e: React.DragEvent, props: any, setState: SetState) {
   e.stopPropagation();
   e.preventDefault();
-  e.currentTarget.classList.remove(styles['active']);
+  setState(false);
 }
 
 const handleDragOver = (e: React.DragEvent) => {
@@ -43,10 +44,10 @@ const handleDragOver = (e: React.DragEvent) => {
   e.preventDefault();
 };
 
-function handleDrop(e: React.DragEvent, props: any) {
+function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
   e.stopPropagation();
   e.preventDefault();
-  e.currentTarget.classList.remove(styles['active']);
+  setState(false);
 
   const { node, parent, index, treeState, onChange, nodeList } = props;
   const { node: fromNode, parent: fromParent, index: fromIndex, el: fromEl } = treeState.dragged;
@@ -59,7 +60,8 @@ function handleDrop(e: React.DragEvent, props: any) {
 function handleDragEnd(e: React.DragEvent, props: any) {
   e.stopPropagation();
   e.preventDefault();
-  const { treeDispatch, node } = props;
+  const { treeDispatch, setDragging } = props;
+  setDragging(false);
   treeDispatch({ type: 'dragged', payload: null });
 }
 
