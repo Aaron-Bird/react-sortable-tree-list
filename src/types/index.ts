@@ -13,21 +13,40 @@ type TreeNodeData =
     };
 
 interface TreeState {
-  dragged?: { node: TreeNodeData; parent: TreeNodeData };
+  dragged?: { node: TreeNodeData; parent: TreeNodeData; index: number };
 }
 interface TreeAction {
   type: 'dragged';
   payload: any;
 }
 
+interface TreeNodeChildrenProps {
+  treeState: TreeState;
+  treeDispatch: React.Dispatch<TreeAction>;
+  onChange: OnChange;
+  NodeRenderer: NodeRenderer;
+  nodeList: TreeNodeData[];
+  children: TreeNodeData[];
+  parent: TreeNodeData;
+  level: number;
+}
+
+interface TreeNodeContentProps {
+  treeState: TreeState;
+  treeDispatch: React.Dispatch<TreeAction>;
+  onChange: OnChange;
+  NodeRenderer: NodeRenderer;
+  nodeList: TreeNodeData[];
+  parent: TreeNodeData;
+  level: number;
+  index: number;
+  node: TreeNodeData;
+}
+
 interface TreeNodeInfo {
   NodeRenderer?: NodeRenderer;
   node: TreeNodeData;
-  active?: boolean;
   index?: number;
-  setActive?: React.Dispatch<React.SetStateAction<boolean>>;
-  dragging?: boolean;
-  setDragging?: React.Dispatch<React.SetStateAction<boolean>>;
   level: number;
   nodeList: TreeNodeData[];
   children: TreeNodeData[];
@@ -49,4 +68,13 @@ type NodeRenderer = ({
 
 type OnChange = (nodeList: TreeNodeData[]) => void;
 
-export { TreeNodeData, NodeRenderer, OnChange, TreeNodeInfo, TreeState, TreeAction };
+export {
+  TreeNodeData,
+  NodeRenderer,
+  OnChange,
+  TreeNodeInfo,
+  TreeState,
+  TreeAction,
+  TreeNodeChildrenProps,
+  TreeNodeContentProps,
+};

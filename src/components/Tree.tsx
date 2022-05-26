@@ -1,7 +1,9 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useMemo, useReducer, useRef, useState } from 'react';
 import { TreeNodeData, NodeRenderer, OnChange, TreeState, TreeAction } from '../types';
 import { createRootNode } from '../utils';
 import { TreeNodeChildren } from './TreeNodeChildren';
+import classNames from 'classnames';
+import styles from '../index.less';
 
 const Tree = (props: {
   nodeList: TreeNodeData[];
@@ -11,33 +13,40 @@ const Tree = (props: {
 }) => {
   const { nodeList, NodeRenderer, onChange, containerProps } = props;
   const rootNode = useMemo(() => createRootNode(nodeList), [nodeList]);
+
+  const draggedRef = useRef({});
+  const [dragging, setDragging] = useState(false);
   const [treeState, treeDispatch] = useReducer(
     (state: TreeState, action: TreeAction) => {
       switch (action.type) {
         case 'dragged':
-          return { dragged: action.payload };
+          if (action.payload) {
+            state.dragged = action.payload;
+            setDragging(true);
+          } else {
+            console.log('----')
+            state.dragged = null;
+            setDragging(false);
+          }
+          return state;
         default:
           throw new Error('Unknown dispatch type: ' + action.type);
       }
     },
     { dragged: null }
   );
-  const nodeInfo = useMemo(() => {
-    return {
-      children: rootNode.children,
-      NodeRenderer,
-      level: 0,
-      nodeList,
-      treeState,
-      treeDispatch,
-      parent: rootNode,
-      onChange,
-      node: rootNode,
-    };
-  }, [rootNode.children, NodeRenderer, nodeList, treeState, treeDispatch, rootNode, onChange]);
   return (
-    <div className="sortable-tree" {...containerProps}>
-      <TreeNodeChildren {...nodeInfo}></TreeNodeChildren>
+    <div className={classNames([styles['sortable-tree'], { [styles['dragging']]: dragging }])} {...containerProps}>
+      <TreeNodeChildren
+        children={rootNode.children}
+        NodeRenderer={NodeRenderer}
+        level={0}
+        nodeList={nodeList}
+        treeDispatch={treeDispatch}
+        parent={rootNode}
+        onChange={onChange}
+        treeState={treeState}
+      ></TreeNodeChildren>
     </div>
   );
 };

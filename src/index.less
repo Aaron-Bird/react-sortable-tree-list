@@ -1,56 +1,32 @@
+.sortable-tree.dragging {
+  .tree-node-content > * {
+    pointer-events: none;
+  }
+}
+
 .tree-node {
   position: relative;
-}
-
-.tree-node--active {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.tree-node-prev {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 16px;
-  transform: translateY(-50%);
-  z-index: 1;
-  &.active {
-    &::before {
-      top: calc(50%);
-      transform: translateY(-50%);
-      position: absolute;
-      content: '';
-      display: block;
-      pointer-events: none;
-      width: 100%;
-      border-top: 4px solid #03a9f4;
-    }
-  }
-
-}
-
-.tree-node-content {
-  &.active {
+  &.tree-node--active {
     background: rgba(0, 0, 0, 0.1);
   }
-  &.dragging {
-    visibility: hidden;
-  }
-}
-
-.tree-node-next {
-  top: 0;
-  width: 100%;
-  height: 16px;
-  transform: translateY(-50%);
-  z-index: 1;
-  &.active::after {
-    top: calc(50%);
-    transform: translateY(-50%);
-    position: absolute;
+  &.tree-node--active-prev::before {
     content: '';
     display: block;
-    pointer-events: none;
-    width: 100%;
+    position: absolute;
+    top: -2px;
     border-top: 4px solid #03a9f4;
+    width: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  &.tree-node--active-next::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -2px;
+    border-top: 4px solid #03a9f4;
+    width: 100%;
+    pointer-events: none;
+    z-index: 1;
   }
 }
