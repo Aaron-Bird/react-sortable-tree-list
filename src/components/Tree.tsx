@@ -14,7 +14,6 @@ const Tree = (props: {
   const { nodeList, NodeRenderer, onChange, containerProps } = props;
   const rootNode = useMemo(() => createRootNode(nodeList), [nodeList]);
 
-  const draggedRef = useRef({});
   const [dragging, setDragging] = useState(false);
   const [treeState, treeDispatch] = useReducer(
     (state: TreeState, action: TreeAction) => {
@@ -24,7 +23,6 @@ const Tree = (props: {
             state.dragged = action.payload;
             setDragging(true);
           } else {
-            console.log('----')
             state.dragged = null;
             setDragging(false);
           }

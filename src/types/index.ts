@@ -1,16 +1,16 @@
 import React, { ReactNode } from 'react';
 
-type TreeNodeData =
-  | {
-      key: any;
-      children?: TreeNodeData[];
-      folder?: boolean;
-      [key: string]: any;
-    }
-  | {
-      root: true;
-      children: TreeNodeData[];
-    };
+interface TreeData {
+  root: true;
+  children: TreeNodeData[];
+}
+
+interface TreeNodeData {
+  key: any;
+  children?: TreeNodeData[];
+  folder?: boolean;
+  [key: string]: any;
+}
 
 interface TreeState {
   dragged?: { node: TreeNodeData; parent: TreeNodeData; index: number };
@@ -27,8 +27,22 @@ interface TreeNodeChildrenProps {
   NodeRenderer: NodeRenderer;
   nodeList: TreeNodeData[];
   children: TreeNodeData[];
-  parent: TreeNodeData;
+  parent: TreeData | TreeNodeData;
   level: number;
+}
+
+interface TreeNodeProps {
+  treeState: TreeState;
+  treeDispatch: React.Dispatch<TreeAction>;
+  onChange: OnChange;
+  NodeRenderer: NodeRenderer;
+  nodeList: TreeNodeData[];
+  parent: TreeData | TreeNodeData;
+  level: number;
+  index: number;
+  node: TreeNodeData;
+  parentUpdate: any;
+  parentSetUpdate: any;
 }
 
 interface TreeNodeContentProps {
@@ -37,44 +51,31 @@ interface TreeNodeContentProps {
   onChange: OnChange;
   NodeRenderer: NodeRenderer;
   nodeList: TreeNodeData[];
-  parent: TreeNodeData;
+  parent: TreeData | TreeNodeData;
   level: number;
   index: number;
   node: TreeNodeData;
+  update: any;
+  setUpdate: any;
+  parentUpdate: any;
+  parentSetUpdate: any;
 }
 
-interface TreeNodeInfo {
-  NodeRenderer?: NodeRenderer;
-  node: TreeNodeData;
-  index?: number;
-  level: number;
-  nodeList: TreeNodeData[];
-  children: TreeNodeData[];
-  parent: TreeNodeData;
-  treeState: TreeState;
-  treeDispatch: React.Dispatch<TreeAction>;
-  onChange: OnChange;
-}
+interface NodeRendererProps extends TreeNodeContentProps {}
 
-type NodeRenderer = ({
-  node,
-  level,
-  nodeList,
-}: {
-  node: TreeNodeData;
-  level: number;
-  nodeList: TreeNodeData[];
-}) => ReactNode;
+type NodeRenderer = (props: NodeRendererProps) => ReactNode;
 
 type OnChange = (nodeList: TreeNodeData[]) => void;
 
 export {
+  TreeData,
   TreeNodeData,
   NodeRenderer,
+  NodeRendererProps,
   OnChange,
-  TreeNodeInfo,
   TreeState,
   TreeAction,
   TreeNodeChildrenProps,
   TreeNodeContentProps,
+  TreeNodeProps
 };

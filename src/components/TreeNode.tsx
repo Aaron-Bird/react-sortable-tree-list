@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TreeNodeChildren } from './TreeNodeChildren';
 import { TreeNodeContent } from './TreeNodeContent';
+import {TreeNodeProps} from '../types';
 
-const TreeNode = (props: any) => {
+const TreeNode = React.memo((props: TreeNodeProps) => {
+  const {parentUpdate, parentSetUpdate} = props;
+  const [update, setUpdate] = useState({});
   const {
     NodeRenderer,
     nodeList,
@@ -26,6 +29,10 @@ const TreeNode = (props: any) => {
         treeState={treeState}
         treeDispatch={treeDispatch}
         onChange={onChange}
+        update={update}
+        setUpdate={setUpdate}
+        parentUpdate={parentUpdate}
+        parentSetUpdate={parentSetUpdate}
       ></TreeNodeContent>
       {!node.folder && Array.isArray(node.children) && (
         <TreeNodeChildren
@@ -41,6 +48,6 @@ const TreeNode = (props: any) => {
       )}
     </React.Fragment>
   );
-};
+});
 
 export { TreeNode };

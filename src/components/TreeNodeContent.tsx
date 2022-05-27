@@ -1,24 +1,19 @@
 import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import styles from '../index.less';
-import { TreeNodeInfo, TreeNodeContentProps } from '../types';
+import {  TreeNodeContentProps } from '../types';
 import { handleDragStart, handleDragEnter, handleDragLeave, handleDrop, handleDragEnd, handleDragOver } from '../event';
-import { moveNodePosition } from '../utils';
 
 const TreeNodeContent = React.memo((props: TreeNodeContentProps) => {
-  const { NodeRenderer, node, onChange } = props;
+  console.log('+')
+  const { NodeRenderer, node, level } = props;
   const [active, setActive] = useState<string>(null);
   const treeNodeRef = useRef();
   return (
     <div
       ref={treeNodeRef}
       className={classNames([
-        styles['tree-node'],
-        {
-          [styles['tree-node--active-next']]: active === 'active-next',
-          [styles['tree-node--active-prev']]: active === 'active-prev',
-          [styles['tree-node--active']]: active === 'active',
-        },
+        'sortable-tree-node',
       ])}
       key={node.key}
     >
@@ -34,7 +29,19 @@ const TreeNodeContent = React.memo((props: TreeNodeContentProps) => {
         onDrop={(e: React.DragEvent) => handleDrop(e, props, setActive)}
         onDragEnd={(e: React.DragEvent) => handleDragEnd(e, props)}
       >
-        {NodeRenderer(props)}
+        <div
+          className={classNames([
+            styles['tree-node-content'],
+            {
+              [styles['tree-node--active-next']]: active === 'active-next',
+              [styles['tree-node--active-prev']]: active === 'active-prev',
+              [styles['tree-node--active']]: active === 'active',
+            },
+          ])}
+          style={{ marginLeft: level * 20 + 'px' }}
+        >
+          {NodeRenderer(props)}
+        </div>
       </div>
     </div>
   );

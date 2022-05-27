@@ -1,4 +1,4 @@
-import { TreeNodeData } from '../types';
+import { TreeData, TreeNodeData } from '../types';
 
 function omit(object: object, paths: string[]): object {
   const newObject: { [key: string]: any } = {};
@@ -11,7 +11,7 @@ function omit(object: object, paths: string[]): object {
 }
 
 function createRootNode(nodeList: TreeNodeData[]) {
-  const root: TreeNodeData = {
+  const root: TreeData = {
     root: true,
     children: nodeList,
   };
@@ -22,26 +22,17 @@ function moveNodePosition(
   fromNode: TreeNodeData,
   fromParent: TreeNodeData,
   fromIndex: number,
-  toNode: TreeNodeData,
+  toNode: TreeNodeData, 
   toParent: TreeNodeData,
   toIndex: number
 ) {
   if (fromIndex == undefined || toIndex == undefined) throw new Error('Wrong params');
+  const fromParentChildren = fromParent.children || [];
+  const toParentChildren = toParent.children || [];
 
-  if (!toParent.children) toParent.children = [];
-  if (!fromParent.children) fromParent.children = [];
-
-  if (fromNode === toNode) return { node: fromNode, move: false };
-  // Disable move to child
-  if (isChildNode(fromNode, toNode)) return { node: fromNode, move: false };
-
-  toParent.children.splice(toIndex, 0, fromNode);
+  toParentChildren.splice(toIndex, 0, fromNode);
   if (fromParent === toParent && fromIndex > toIndex) fromIndex += 1;
-  fromParent.children.splice(fromIndex, 1);
-  return {
-    node: fromNode,
-    move: true,
-  };
+  fromParentChildren.splice(fromIndex, 1);
 }
 
 function isChildNode(parentNode: TreeNodeData, childNode: TreeNodeData) {
@@ -58,4 +49,8 @@ function isChildNode(parentNode: TreeNodeData, childNode: TreeNodeData) {
   return false;
 }
 
-export { createRootNode, moveNodePosition, isChildNode, omit };
+function canMoveNode(fromNode: TreeNodeData, toNode: TreeNodeData) {
+  return fromNode && fromNode !== toNode && !isChildNode(fromNode, toNode);
+}
+
+export { createRootNode, moveNodePosition, isChildNode, omit, canMoveNode };

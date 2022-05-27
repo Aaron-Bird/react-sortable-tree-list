@@ -1,5 +1,5 @@
 import React from 'react';
-import { TreeNodeData, NodeRenderer, OnChange } from './types';
+import { TreeNodeData, NodeRenderer, OnChange, NodeRendererProps } from './types';
 import { Tree } from './components/Tree';
 
 interface SortableTreeProps {
@@ -21,4 +21,4 @@ export default function SortableTree(props: SortableTreeProps) {
   );
 }
 
-export { SortableTree, TreeNodeData };
+export { SortableTree, NodeRendererProps };

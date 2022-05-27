@@ -1,6 +1,8 @@
 import React from 'react';
-import { moveNodePosition, isChildNode } from './utils';
+import { moveNodePosition, canMoveNode } from './utils';
 import styles from './index.less';
+
+const EDGE_HEIGHT = 10;
 
 function handleDrag(e: React.DragEvent) {
   e.stopPropagation();
@@ -8,7 +10,7 @@ function handleDrag(e: React.DragEvent) {
 }
 
 function handleDragStart(e: React.DragEvent, props: any) {
-  const { treeDispatch, node, parent, index, treeState } = props;
+  const { treeDispatch, node, parent, index, setUpdate, parentSetUpdate } = props;
   e.stopPropagation();
   treeDispatch({
     type: 'dragged',
@@ -16,6 +18,8 @@ function handleDragStart(e: React.DragEvent, props: any) {
       node,
       parent,
       index,
+      setUpdate,
+      parentSetUpdate,
     },
   });
 }
@@ -24,12 +28,6 @@ type SetState = React.Dispatch<React.SetStateAction<string>>;
 function handleDragEnter(e: React.DragEvent, props: any, setState: SetState) {
   e.stopPropagation();
   e.preventDefault();
-  // const { treeState, node, draggedRef } = props;
-  // const fromNode = treeState?.dragged.node;
-
-  // if (fromNode && fromNode !== node && !isChildNode(fromNode, node)) {
-  // e.currentTarget.classList.add(styles['active']);
-  // }
 }
 
 function handleDragLeave(e: React.DragEvent, props: any, setState: SetState) {
@@ -51,13 +49,13 @@ const handleDragOver = (
   if (treeState.dragged?.node === node) return;
 
   const fromNode = treeState?.dragged.node;
-  if (fromNode && fromNode !== node && !isChildNode(fromNode, node)) {
+  if (canMoveNode(fromNode, node)) {
     const el = e.currentTarget;
     const rect = el.getBoundingClientRect();
     const mouseY = e.clientY - rect.top;
-    if (mouseY < 8) {
+    if (mouseY < EDGE_HEIGHT) {
       setActive('active-prev');
-    } else if (rect.height - mouseY < 8) {
+    } else if (rect.height - mouseY < EDGE_HEIGHT) {
       setActive('active-next');
     } else {
       setActive('active');
@@ -69,15 +67,54 @@ function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
   e.stopPropagation();
   e.preventDefault();
   setState(null);
-  e.currentTarget.classList.remove(styles['active']);
-  const { node, treeState, onChange, nodeList, treeDispatch } = props;
-
-  const { node: fromNode, parent: fromParent, index: fromIndex, el: fromEl } = treeState.dragged;
-  if (fromNode === node) return;
-
-  const { move } = moveNodePosition(fromNode, fromParent, fromIndex, node, node, node.children.length);
+  const {
+    node,
+    treeState,
+    onChange,
+    nodeList,
+    treeDispatch,
+    parent,
+    index,
+    setUpdate: toSetUpdate,
+    parentSetUpdate: toParentSetUpdate,
+  } = props;
+  const {
+    node: fromNode,
+    parent: fromParent,
+    index: fromIndex,
+    el: fromEl,
+    setUpdate: fromSetUpdate,
+    parentSetUpdate: fromParentSetUpdate,
+  } = treeState.dragged;
   treeDispatch({ type: 'dragged', payload: null });
-  if (move) onChange(nodeList);
+
+  if (canMoveNode(fromNode, node)) {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const mouseY = e.clientY - rect.top;
+    let result;
+    if (mouseY < EDGE_HEIGHT) {
+      moveNodePosition(fromNode, fromParent, fromIndex, node, parent, index);
+
+      if (fromParent !== parent) toParentSetUpdate({});
+    } else if (rect.height - mouseY < EDGE_HEIGHT) {
+      const toNodeNextIndex = index + 1;
+      const toNodeNext = parent.children[toNodeNextIndex];
+      if (toNodeNextIndex >= parent.children.length) {
+        moveNodePosition(fromNode, fromParent, fromIndex, parent, parent, parent.children.length);
+      } else {
+        moveNodePosition(fromNode, fromParent, fromIndex, toNodeNext, parent, toNodeNextIndex);
+      }
+
+      if (fromParent !== parent) toParentSetUpdate({});
+    } else {
+      moveNodePosition(fromNode, fromParent, fromIndex, node, node, node.children.length);
+      toSetUpdate({});
+    }
+
+    fromParentSetUpdate({});
+    onChange(nodeList);
+  }
 }
 
 function handleDragEnd(e: React.DragEvent, props: any) {
