@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useReducer, useRef, useState } from 'react';
 import { TreeNodeData, NodeRenderer, OnChange, TreeState, TreeAction } from '../types';
 import { createRootNode } from '../utils';
 import { TreeNodeChildren } from './TreeNodeChildren';
@@ -34,7 +34,7 @@ const Tree = (props: {
     { dragged: null }
   );
   const [update, setUpdate] = useState({});
-
+  const updateComponent = useCallback(() => setUpdate({}), []);
   return (
     <div className={classNames([styles['sortable-tree'], { [styles['dragging']]: dragging }])} {...containerProps}>
       <TreeNodeChildren
@@ -47,7 +47,7 @@ const Tree = (props: {
         onChange={onChange}
         treeState={treeState}
         parentUpdate={update}
-        parentSetUpdate={setUpdate}
+        parentUpdateComponent={updateComponent}
       ></TreeNodeChildren>
     </div>
   );

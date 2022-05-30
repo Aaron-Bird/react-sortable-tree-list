@@ -3,7 +3,17 @@ import type { TreeNodeData, TreeNodeChildrenProps } from '../types';
 import { TreeNode } from './TreeNode';
 
 const TreeNodeChildren = (props: TreeNodeChildrenProps) => {
-  const { children, parent, NodeRenderer, level, nodeList, treeDispatch, onChange, treeState, parentSetUpdate } = props;
+  const {
+    children,
+    parent,
+    NodeRenderer,
+    level,
+    nodeList,
+    treeDispatch,
+    onChange,
+    treeState,
+    parentUpdateComponent,
+  } = props;
   return (
     <React.Fragment>
       {children.map((node: TreeNodeData, index: number) => {
@@ -21,7 +31,7 @@ const TreeNodeChildren = (props: TreeNodeChildrenProps) => {
             parent={parent}
             onChange={onChange}
             treeState={treeState}
-            parentSetUpdate={parentSetUpdate}
+            parentUpdateComponent={parentUpdateComponent}
           ></TreeNode>
         );
       })}

@@ -1,7 +1,5 @@
 import React from 'react';
 import { moveNodePosition, canMoveNode } from './utils';
-import styles from './index.less';
-
 const EDGE_HEIGHT = 10;
 
 function handleDrag(e: React.DragEvent) {
@@ -10,7 +8,7 @@ function handleDrag(e: React.DragEvent) {
 }
 
 function handleDragStart(e: React.DragEvent, props: any) {
-  const { treeDispatch, node, parent, index, setUpdate, parentSetUpdate } = props;
+  const { treeDispatch, node, parent, index, updateComponent, parentUpdateComponent } = props;
   e.stopPropagation();
   treeDispatch({
     type: 'dragged',
@@ -18,8 +16,8 @@ function handleDragStart(e: React.DragEvent, props: any) {
       node,
       parent,
       index,
-      setUpdate,
-      parentSetUpdate,
+      updateComponent: updateComponent,
+      parentUpdateComponent: parentUpdateComponent,
     },
   });
 }
@@ -75,16 +73,16 @@ function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
     treeDispatch,
     parent,
     index,
-    setUpdate: toSetUpdate,
-    parentSetUpdate: toParentSetUpdate,
+    updateComponent: toUpdateComponent,
+    parentUpdateComponent: toParentUpdateComponent,
   } = props;
   const {
     node: fromNode,
     parent: fromParent,
     index: fromIndex,
     el: fromEl,
-    setUpdate: fromSetUpdate,
-    parentSetUpdate: fromParentSetUpdate,
+    updateComponent: fromUpdateComponent,
+    parentUpdateComponent: fromParentUpdateComponent,
   } = treeState.dragged;
   treeDispatch({ type: 'dragged', payload: null });
 
@@ -92,11 +90,12 @@ function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
     const el = e.currentTarget;
     const rect = el.getBoundingClientRect();
     const mouseY = e.clientY - rect.top;
-    let result;
     if (mouseY < EDGE_HEIGHT) {
       moveNodePosition(fromNode, fromParent, fromIndex, node, parent, index);
 
-      if (fromParent !== parent) toParentSetUpdate({});
+      if (fromParent !== parent) {
+        toParentUpdateComponent();
+      }
     } else if (rect.height - mouseY < EDGE_HEIGHT) {
       const toNodeNextIndex = index + 1;
       const toNodeNext = parent.children[toNodeNextIndex];
@@ -106,13 +105,15 @@ function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
         moveNodePosition(fromNode, fromParent, fromIndex, toNodeNext, parent, toNodeNextIndex);
       }
 
-      if (fromParent !== parent) toParentSetUpdate({});
+      if (fromParent !== parent) {
+        toParentUpdateComponent();
+      }
     } else {
       moveNodePosition(fromNode, fromParent, fromIndex, node, node, 0);
-      toSetUpdate({});
+      toUpdateComponent();
     }
 
-    fromParentSetUpdate({});
+    fromParentUpdateComponent();
     onChange(nodeList);
   }
 }

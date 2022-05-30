@@ -1,23 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { TreeNodeChildren } from './TreeNodeChildren';
 import { TreeNodeContent } from './TreeNodeContent';
-import {TreeNodeProps} from '../types';
+import { TreeNodeProps } from '../types';
 
 const TreeNode = React.memo((props: TreeNodeProps) => {
-  const { parentSetUpdate} = props;
+  const { parentUpdateComponent } = props;
 
   const [update, setUpdate] = useState({});
-  const {
-    NodeRenderer,
-    nodeList,
-    treeState,
-    treeDispatch,
-    onChange,
-    level,
-    parent,
-    node,
-    index,
-  } = props;
+  const updateComponent = useCallback(() => setUpdate({}), []);
+  const { NodeRenderer, nodeList, treeState, treeDispatch, onChange, level, parent, node, index } = props;
   return (
     <React.Fragment>
       <TreeNodeContent
@@ -31,8 +22,8 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
         treeDispatch={treeDispatch}
         onChange={onChange}
         update={update}
-        setUpdate={setUpdate}
-        parentSetUpdate={parentSetUpdate}
+        updateComponent={updateComponent}
+        parentUpdateComponent={parentUpdateComponent}
       ></TreeNodeContent>
       {!node.folder && Array.isArray(node.children) && (
         <TreeNodeChildren
@@ -45,7 +36,7 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
           parent={node}
           level={level + 1}
           parentUpdate={update}
-          parentSetUpdate={setUpdate}
+          parentUpdateComponent={updateComponent}
         ></TreeNodeChildren>
       )}
     </React.Fragment>

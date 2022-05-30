@@ -29,8 +29,8 @@ interface TreeNodeChildrenProps {
   children: TreeNodeData[];
   parent: TreeData | TreeNodeData;
   level: number;
-  parentUpdate: any;
-  parentSetUpdate: React.Dispatch<React.SetStateAction<{}>>;
+  parentUpdate: object;
+  parentUpdateComponent: () => void;
 }
 
 interface TreeNodeProps {
@@ -43,7 +43,7 @@ interface TreeNodeProps {
   level: number;
   index: number;
   node: TreeNodeData;
-  parentSetUpdate: React.Dispatch<React.SetStateAction<{}>>;
+  parentUpdateComponent: () => void;
 }
 
 interface TreeNodeContentProps {
@@ -57,8 +57,8 @@ interface TreeNodeContentProps {
   index: number;
   node: TreeNodeData;
   update: any;
-  setUpdate: React.Dispatch<React.SetStateAction<{}>>;
-  parentSetUpdate: React.Dispatch<React.SetStateAction<{}>>;
+  parentUpdateComponent: () => void;
+  updateComponent: () => void;
 }
 
 interface NodeRendererProps extends TreeNodeContentProps {}
