@@ -33,6 +33,8 @@ const Tree = (props: {
     },
     { dragged: null }
   );
+  const [update, setUpdate] = useState({});
+
   return (
     <div className={classNames([styles['sortable-tree'], { [styles['dragging']]: dragging }])} {...containerProps}>
       <TreeNodeChildren
@@ -44,6 +46,8 @@ const Tree = (props: {
         parent={rootNode}
         onChange={onChange}
         treeState={treeState}
+        parentUpdate={update}
+        parentSetUpdate={setUpdate}
       ></TreeNodeChildren>
     </div>
   );

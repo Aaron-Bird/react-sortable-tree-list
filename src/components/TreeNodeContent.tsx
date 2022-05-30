@@ -5,7 +5,6 @@ import {  TreeNodeContentProps } from '../types';
 import { handleDragStart, handleDragEnter, handleDragLeave, handleDrop, handleDragEnd, handleDragOver } from '../event';
 
 const TreeNodeContent = React.memo((props: TreeNodeContentProps) => {
-  console.log('+')
   const { NodeRenderer, node, level } = props;
   const [active, setActive] = useState<string>(null);
   const treeNodeRef = useRef();
@@ -19,9 +18,7 @@ const TreeNodeContent = React.memo((props: TreeNodeContentProps) => {
     >
       <div
         draggable="true"
-        className={classNames(styles['tree-node-content'], {
-          // [styles['active']]: active,
-        })}
+        className={classNames(styles['tree-node-content'])}
         onDragStart={(e: React.DragEvent) => handleDragStart(e, props)}
         onDragEnter={(e: React.DragEvent) => handleDragEnter(e, props, setActive)}
         onDragLeave={(e: React.DragEvent) => handleDragLeave(e, props, setActive)}

@@ -4,7 +4,8 @@ import { TreeNodeContent } from './TreeNodeContent';
 import {TreeNodeProps} from '../types';
 
 const TreeNode = React.memo((props: TreeNodeProps) => {
-  const {parentUpdate, parentSetUpdate} = props;
+  const { parentSetUpdate} = props;
+
   const [update, setUpdate] = useState({});
   const {
     NodeRenderer,
@@ -31,7 +32,6 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
         onChange={onChange}
         update={update}
         setUpdate={setUpdate}
-        parentUpdate={parentUpdate}
         parentSetUpdate={parentSetUpdate}
       ></TreeNodeContent>
       {!node.folder && Array.isArray(node.children) && (
@@ -44,6 +44,8 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
           children={node.children}
           parent={node}
           level={level + 1}
+          parentUpdate={update}
+          parentSetUpdate={setUpdate}
         ></TreeNodeChildren>
       )}
     </React.Fragment>

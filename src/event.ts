@@ -108,7 +108,7 @@ function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
 
       if (fromParent !== parent) toParentSetUpdate({});
     } else {
-      moveNodePosition(fromNode, fromParent, fromIndex, node, node, node.children.length);
+      moveNodePosition(fromNode, fromParent, fromIndex, node, node, 0);
       toSetUpdate({});
     }
 
