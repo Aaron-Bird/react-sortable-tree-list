@@ -11,7 +11,21 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
   const { NodeRenderer, nodeList, treeState, treeDispatch, onChange, level, parent, node, index } = props;
   return (
     <React.Fragment>
-      <TreeNodeContent
+      {NodeRenderer({
+        NodeRenderer: NodeRenderer,
+        node: node,
+        index: index,
+        level: level,
+        nodeList: nodeList,
+        parent: parent,
+        treeState: treeState,
+        treeDispatch: treeDispatch,
+        onChange: onChange,
+        update: update,
+        updateComponent: updateComponent,
+        parentUpdateComponent: parentUpdateComponent,
+      })}
+      {/* <TreeNodeContent
         NodeRenderer={NodeRenderer}
         node={node}
         index={index}
@@ -24,8 +38,8 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
         update={update}
         updateComponent={updateComponent}
         parentUpdateComponent={parentUpdateComponent}
-      ></TreeNodeContent>
-      {!node.folder && Array.isArray(node.children) && (
+      ></TreeNodeContent> */}
+      {node.expanded && Array.isArray(node.children) && (
         <TreeNodeChildren
           treeState={treeState}
           treeDispatch={treeDispatch}

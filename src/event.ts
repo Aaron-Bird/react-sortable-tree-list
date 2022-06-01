@@ -28,16 +28,15 @@ function handleDragEnter(e: React.DragEvent, props: any, setState: SetState) {
   e.preventDefault();
 }
 
-function handleDragLeave(e: React.DragEvent, props: any, setState: SetState) {
+function handleDragLeave(e: React.DragEvent, props: any, setActive: SetState) {
   e.stopPropagation();
   e.preventDefault();
-  setState(null);
+  setActive(null);
 }
 
 const handleDragOver = (
   e: React.DragEvent,
   props: any,
-  treeNodeRef: React.RefObject<HTMLElement>,
   setActive: SetState
 ) => {
   e.stopPropagation();
@@ -61,10 +60,10 @@ const handleDragOver = (
   }
 };
 
-function handleDrop(e: React.DragEvent, props: any, setState: SetState) {
+function handleDrop(e: React.DragEvent, props: any, setActive: SetState) {
   e.stopPropagation();
   e.preventDefault();
-  setState(null);
+  setActive(null);
   const {
     node,
     treeState,

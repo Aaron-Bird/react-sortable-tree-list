@@ -22,7 +22,7 @@ function moveNodePosition(
   fromNode: TreeNodeData,
   fromParent: TreeNodeData,
   fromIndex: number,
-  toNode: TreeNodeData, 
+  toNode: TreeNodeData,
   toParent: TreeNodeData,
   toIndex: number
 ) {
@@ -33,6 +33,30 @@ function moveNodePosition(
   toParentChildren.splice(toIndex, 0, fromNode);
   if (fromParent === toParent && fromIndex > toIndex) fromIndex += 1;
   fromParentChildren.splice(fromIndex, 1);
+}
+
+function insertBefore(dragged: any, target: any) {
+  const { node: fromNode, parent: fromParent, index: fromIndex } = dragged;
+  const { node, parent, index } = target;
+  moveNodePosition(fromNode, fromParent, fromIndex, node, parent, index);
+}
+
+function insertAfter(dragged: any, target: any) {
+  const { node: fromNode, parent: fromParent, index: fromIndex } = dragged;
+  const { node, parent, index } = target;
+  const toNodeNextIndex = index + 1;
+  const toNodeNext = parent.children[toNodeNextIndex];
+  if (toNodeNextIndex >= parent.children.length) {
+    moveNodePosition(fromNode, fromParent, fromIndex, parent, parent, parent.children.length);
+  } else {
+    moveNodePosition(fromNode, fromParent, fromIndex, toNodeNext, parent, toNodeNextIndex);
+  }
+}
+
+function appendChild(dragged: any, target: any) {
+  const { node: fromNode, parent: fromParent, index: fromIndex } = dragged;
+  const { node } = target;
+  moveNodePosition(fromNode, fromParent, fromIndex, node, node, 0);
 }
 
 function isChildNode(parentNode: TreeNodeData, childNode: TreeNodeData) {
@@ -53,4 +77,4 @@ function canMoveNode(fromNode: TreeNodeData, toNode: TreeNodeData) {
   return fromNode && fromNode !== toNode && !isChildNode(fromNode, toNode);
 }
 
-export { createRootNode, moveNodePosition, isChildNode, omit, canMoveNode };
+export { createRootNode, moveNodePosition, isChildNode, omit, canMoveNode, insertBefore, appendChild, insertAfter };

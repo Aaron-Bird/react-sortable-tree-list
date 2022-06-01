@@ -1,18 +1,17 @@
 import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import styles from '../index.less';
-import { TreeNodeContentProps } from '../types';
+import { TreeNodeContentProps, TreeNodeRender } from '../types';
 import { handleDragStart, handleDragEnter, handleDragLeave, handleDrop, handleDragEnd, handleDragOver } from '../event';
 
-const TreeNodeContent = React.memo((props: TreeNodeContentProps) => {
-  const { NodeRenderer, node, level } = props;
-  const [active, setActive] = useState<string>(null);
-  const treeNodeRef = useRef();
-  return (
-    <div ref={treeNodeRef} className={classNames(['sortable-tree-node'])} key={node.key}>
+const TreeNodeLine = (TreeNodeRender: TreeNodeRender) => {
+  return (props: TreeNodeContentProps) => {
+    const { level } = props;
+    const [active, setActive] = useState<string>(null);
+    return (
       <div
         draggable="true"
-        className={classNames(styles['tree-node-content'])}
+        className={classNames(['sortable-tree-node', styles['sortable-tree-node']])}
         onDragStart={(e: React.DragEvent) => handleDragStart(e, props)}
         onDragEnter={(e: React.DragEvent) => handleDragEnter(e, props, setActive)}
         onDragLeave={(e: React.DragEvent) => handleDragLeave(e, props, setActive)}
@@ -31,11 +30,11 @@ const TreeNodeContent = React.memo((props: TreeNodeContentProps) => {
           ])}
           style={{ marginLeft: level * 20 + 'px' }}
         >
-          {NodeRenderer(props)}
+          {TreeNodeRender(props)}
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  };
+};
 
-export { TreeNodeContent };
+export { TreeNodeLine };

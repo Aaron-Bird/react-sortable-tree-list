@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import { TreeNodeData, NodeRenderer, OnChange, NodeRendererProps } from './types';
 import { Tree } from './components/Tree';
-
+import { TreeNodeLine } from './components/TreeNodeLine';
+import { TreeNodeExpand } from './components/TreeNodeExpand';
 interface SortableTreeProps {
   nodeList: TreeNodeData[];
   children: NodeRenderer;
@@ -21,4 +22,4 @@ export default function SortableTree(props: SortableTreeProps) {
   );
 }
 
-export { SortableTree, NodeRendererProps };
+export { SortableTree, TreeNodeLine, TreeNodeExpand, NodeRendererProps, TreeNodeData };

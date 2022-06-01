@@ -1,0 +1,35 @@
+.tree-node_content {
+  position: relative;
+  transition: 0.2s ease;
+  &.active {
+    background: rgba(226, 171, 171, 0.1);
+  }
+}
+
+.tree-node_prev {
+  height: 0px;
+  padding-bottom: 8px;
+  margin-bottom: -8px;
+  z-index: 1;
+  position: relative;
+  transition: 0.2s ease;
+  background-clip: content-box;
+  &.active {
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+&.tree-node_next {
+  height: 0px;
+  padding-top: 8px;
+  margin-top: -8px;
+  z-index: 1;
+  position: relative;
+  transition: 0.2s ease;
+  background-clip: content-box;
+  &.active {
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
