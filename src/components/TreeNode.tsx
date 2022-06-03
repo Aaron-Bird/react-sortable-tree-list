@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { TreeNodeChildren } from './TreeNodeChildren';
-import { TreeNodeContent } from './TreeNodeContent';
 import { TreeNodeProps } from '../types';
+import { OptionContext } from '../contexts/option';
 
 const TreeNode = React.memo((props: TreeNodeProps) => {
   const { parentUpdateComponent } = props;
-
+  const { expandAll } = useContext(OptionContext);
   const [update, setUpdate] = useState({});
   const updateComponent = useCallback(() => setUpdate({}), []);
   const { NodeRenderer, nodeList, treeState, treeDispatch, onChange, level, parent, node, index } = props;
@@ -25,21 +25,7 @@ const TreeNode = React.memo((props: TreeNodeProps) => {
         updateComponent: updateComponent,
         parentUpdateComponent: parentUpdateComponent,
       })}
-      {/* <TreeNodeContent
-        NodeRenderer={NodeRenderer}
-        node={node}
-        index={index}
-        level={level}
-        nodeList={nodeList}
-        parent={parent}
-        treeState={treeState}
-        treeDispatch={treeDispatch}
-        onChange={onChange}
-        update={update}
-        updateComponent={updateComponent}
-        parentUpdateComponent={parentUpdateComponent}
-      ></TreeNodeContent> */}
-      {node.expanded && Array.isArray(node.children) && (
+      {(expandAll || node.expanded) && Array.isArray(node.children) && (
         <TreeNodeChildren
           treeState={treeState}
           treeDispatch={treeDispatch}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { moveNodePosition, canMoveNode } from './utils';
+import { moveNodePosition, canMoveNode } from './index';
 const EDGE_HEIGHT = 10;
 
 function handleDrag(e: React.DragEvent) {

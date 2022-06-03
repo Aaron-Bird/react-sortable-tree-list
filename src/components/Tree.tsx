@@ -3,7 +3,6 @@ import { TreeNodeData, NodeRenderer, OnChange, TreeState, TreeAction } from '../
 import { createRootNode } from '../utils';
 import { TreeNodeChildren } from './TreeNodeChildren';
 import classNames from 'classnames';
-import styles from '../index.less';
 
 const Tree = (props: {
   nodeList: TreeNodeData[];
@@ -36,7 +35,7 @@ const Tree = (props: {
   const [update, setUpdate] = useState({});
   const updateComponent = useCallback(() => setUpdate({}), []);
   return (
-    <div className={classNames([styles['sortable-tree'], { [styles['dragging']]: dragging }])} {...containerProps}>
+    <div className={classNames(['react-sortable-tree-list'], {'dragging': dragging})} {...containerProps}>
       <TreeNodeChildren
         children={rootNode.children}
         NodeRenderer={NodeRenderer}

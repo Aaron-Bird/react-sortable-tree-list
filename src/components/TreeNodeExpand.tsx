@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import styles from './TreeNodeExpand.less';
 import { TreeNodeContentProps, TreeNodeRender } from '../types';
-import { handleDragStart, handleDragEnd } from '../event';
+import { handleDragStart, handleDragEnd } from '../utils';
 import { canMoveNode, insertBefore, appendChild, insertAfter } from '../utils';
 
 export const TreeNodeExpand = (TreeNodeRender: TreeNodeRender) => {

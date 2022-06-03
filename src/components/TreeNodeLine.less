@@ -1,19 +1,9 @@
-.sortable-tree.dragging {
-  .sortable-tree-node > * {
-    pointer-events: none;
-  }
-}
-
-.sortable-tree-node {
-  position: relative;
-}
-
-.tree-node-content {
+.tree-node_content {
   position: relative;
   &.tree-node--active {
     background: rgba(0, 0, 0, 0.1);
   }
-  &.tree-node--active-prev::before {
+  &.tree-node_prev--active::before {
     content: '';
     display: block;
     position: absolute;
@@ -23,7 +13,7 @@
     pointer-events: none;
     z-index: 1;
   }
-  &.tree-node--active-next::after {
+  &.tree-node_next--active::after {
     content: '';
     display: block;
     position: absolute;
@@ -32,5 +22,11 @@
     width: 100%;
     pointer-events: none;
     z-index: 1;
+  }
+}
+
+:global(.react-sortable-tree-list.dragging) {
+  .tree-node > div {
+    pointer-events: none;
   }
 }

@@ -1,4 +1,5 @@
 import { TreeData, TreeNodeData } from '../types';
+export * from './event';
 
 function omit(object: object, paths: string[]): object {
   const newObject: { [key: string]: any } = {};
